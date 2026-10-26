@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AskRoman — Как подружить Bootstrap с Django-шаблонами?</title>
+    <link rel="icon" href="./static/img/favicon.ico">
+    <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./static/css/style.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <header class="border-bottom bg-white py-2">
+        <div class="container d-flex flex-wrap align-items-center gap-3 py-2">
+
+            <a href="./index.html" class="text-decoration-none text-dark flex-shrink-0">
+                <span class="fs-3 fw-semibold">AskRoman</span>
+            </a>
+
+            <form class="header-search d-flex flex-grow-1">
+                <div class="input-group">
+                    <input class="form-control" type="search" placeholder="Search">
+                </div>
+            </form>
+
+            <a href="./ask.html" class="btn btn-success">ASK!</a>
+            
+            <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                <img src="./static/img/avatar-placeholder.png" alt="Roman avatar"
+                     class="rounded-circle" width="50" height="50">
+                <div class="d-flex flex-column">
+                    <a href="./profile.html" class="text-decoration-none text-dark fw-medium">
+                        Roman
+                    </a>
+                    <div class="d-flex gap-2">
+                        <a href="./profile.html" class="btn btn-outline-secondary btn-sm">settings</a>
+                        <a href="./login.html" class="btn btn-outline-danger btn-sm">log out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container flex-grow-1 my-3">
+        <div class="row g-4">
+            <main class="col-12 col-md-8 d-flex flex-column gap-3">
+                <div class="row g-3">
+                    <div class="d-flex flex-column col-md-2 gap-3">
+                        <div class="avatar border border-dark rounded d-flex align-items-center justify-content-center bg-light">
+                            <span class="text-muted">avatar</span>
+                        </div>
+                        <div class="vote-widget border border-dark rounded d-flex align-items-stretch">
+                            <div class="d-flex align-items-center px-2 border-end border-dark fw-bold">
+                                5
+                            </div>
+                            <div class="vote-widget__arrows d-flex flex-column justify-content-center px-1">
+                                <button class="vote-widget__btn" aria-label="Проголосовать за">&#9650;</button>
+                                <button class="vote-widget__btn" aria-label="Проголосовать против">&#9660;</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column col-md-10 gap-3">
+                        <h1 class="h3 mb-0">Как подружить Bootstrap с Django-шаблонами?</h1>
+                        <p class="mb-0">Пытаюсь вынести base.html в отдельный шаблон и подключить его через {% extends %} в index.html, но на мобильной ширине (375px) сетка расползается и сайдбар наезжает на основной контент. Подскажите, в какую сторону копать?</p>
+                        <div class="d-flex flex-wrap align-items-center gap-2">
+                            <span class="text-muted small">Теги:</span>
+                            <ul class="list-unstyled d-flex flex-wrap gap-2 mb-0">
+                                <li><a href="./tags.html" class="badge bg-secondary text-decoration-none">django</a></li>
+                                <li><a href="./tags.html" class="badge bg-secondary text-decoration-none">bootstrap</a></li>
+                                <li><a href="./tags.html" class="badge bg-secondary text-decoration-none">css</a></li>
+                            </ul>
+                        </div>
+                        <span class="send-time text-muted">от <a href="./profile.html" class="text-decoration-none">Roman</a> 5 минут назад</span>
+                    </div>
+                </div>
+                <div class="gap-line"></div>
+
+                <h2 class="h5">Ответы (2)</h2>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center gap-3 mb-2">
+                            <div class="d-flex flex-column align-items-center gap-1">
+                                <div class="avatar border border-dark rounded d-flex align-items-center justify-content-center bg-light">
+                                    <span class="small text-muted">avatar</span>
+                                </div>
+                                <div class="vote-widget border border-dark rounded d-flex align-items-stretch">
+                                    <div class="d-flex align-items-center px-2 border-end border-dark fw-bold">
+                                        7
+                                    </div>
+                                    <div class="vote-widget__arrows d-flex flex-column justify-content-center px-1">
+                                        <button class="vote-widget__btn vote-widget__btn--liked" aria-label="Проголосовать за">&#9650;</button>
+                                        <button class="vote-widget__btn" aria-label="Проголосовать против">&#9660;</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column gap-1">
+                                <span class="send-time text-muted">от <a href="./profile.html" class="text-decoration-none">Dr. House</a> 3 минуты назад</span>
+                                <p class="mb-0">Проверь, что в base.html колонки заданы через col-12 col-md-8 / col-12 col-md-4, а не просто col-8 / col-4 — без col-12 они не падают друг под друга на узких экранах.</p>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" checked disabled id="answer-correct-1">
+                                    <label class="form-check-label" for="answer-correct-1">
+                                        Правильный ответ
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center gap-3 mb-2">
+                            <div class="d-flex flex-column align-items-center gap-1">
+                                <div class="avatar border border-dark rounded d-flex align-items-center justify-content-center bg-light">
+                                    <span class="small text-muted">avatar</span>
+                                </div>
+                                <div class="vote-widget border border-dark rounded d-flex align-items-stretch">
+                                    <div class="d-flex align-items-center px-2 border-end border-dark fw-bold">
+                                        1
+                                    </div>
+                                    <div class="vote-widget__arrows d-flex flex-column justify-content-center px-1">
+                                        <button class="vote-widget__btn" aria-label="Проголосовать за">&#9650;</button>
+                                        <button class="vote-widget__btn" aria-label="Проголосовать против">&#9660;</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column gap-1">
+                                <span class="send-time text-muted">от <a href="./profile.html" class="text-decoration-none">Queen Victoria</a> минуту назад</span>
+                                <p class="mb-0">Ещё можно посмотреть в DevTools на 375px — часто проблема не в колонках, а в элементе с фиксированной шириной внутри карточки, который не умещается.</p>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" disabled id="answer-correct-2">
+                                    <label class="form-check-label" for="answer-correct-2">
+                                        Правильный ответ
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <nav aria-label="Страницы ответов">
+                    <div class="d-flex gap-1">
+                        <button class="btn btn-dark" aria-current="page">1</button>
+                        <button class="btn btn-light">2</button>
+                    </div>
+                </nav>
+
+                <div class="gap-line"></div>
+
+                <form action="#" method="post">
+                    <div class="mb-2">
+                        <label for="answer-text" class="form-label h6">Ваш ответ</label>
+                        <textarea
+                            class="form-control"
+                            id="answer-text"
+                            name="answer"
+                            rows="4"
+                            required
+                            maxlength="2000"
+                            placeholder="Write your answer..."></textarea>
+                        <div class="form-text">Максимум 2000 символов.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Answer</button>
+                </form>
+            </main>
+
+            <aside class="col-12 col-md-4 d-flex flex-column gap-3">
+                <section class="card card-body">
+                    <h2 class="h5">Popular Tags</h2>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="./tags.html" class="text-decoration-none">perl</a>
+                        <a href="./tags.html" class="text-decoration-none">python</a>
+                        <a href="./tags.html" class="text-decoration-none">TechnoPark</a>
+                        <a href="./tags.html" class="text-decoration-none">MySQL</a>
+                        <a href="./tags.html" class="text-decoration-none">django</a>
+                        <a href="./tags.html" class="text-decoration-none">Mail.Ru</a>
+                        <a href="./tags.html" class="text-decoration-none">Voloshin</a>
+                        <a href="./tags.html" class="text-decoration-none">Firefox</a>
+                    </div>
+                </section>
+
+                <section class="card card-body">
+                    <h2 class="h5">Best Members</h2>
+                    <ul class="list-unstyled d-flex flex-column gap-1 mb-0">
+                        <li><a href="./profile.html">Mr. Freeman</a></li>
+                        <li><a href="./profile.html">Dr. House</a></li>
+                        <li><a href="./profile.html">Bender</a></li>
+                        <li><a href="./profile.html">Queen Victoria</a></li>
+                        <li><a href="./profile.html">V. Pupkin</a></li>
+                    </ul>
+                </section>
+            </aside>
+        </div>
+    </div>
+
+    <footer class="border-top bg-white py-3">
+        <div class="container">
+            <p class="mb-0">&copy; 2026 AskRoman. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="./static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
