@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AskRoman — Новый вопрос</title>
+    <link rel="icon" href="./static/img/favicon.ico">
+    <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./static/css/style.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <header class="border-bottom bg-white py-2">
+        <div class="container d-flex flex-wrap align-items-center gap-3 py-2">
+
+            <a href="./index.html" class="text-decoration-none text-dark flex-shrink-0">
+                <span class="fs-3 fw-semibold">AskRoman</span>
+            </a>
+
+            <form class="header-search d-flex flex-grow-1">
+                <div class="input-group">
+                    <input class="form-control" type="search" placeholder="Search">
+                </div>
+            </form>
+
+            <a href="./ask.html" class="btn btn-success">ASK!</a>
+            
+            <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                <img src="./static/img/avatar-placeholder.png" alt="Roman avatar"
+                     class="rounded-circle" width="50" height="50">
+                <div class="d-flex flex-column">
+                    <a href="./profile.html" class="text-decoration-none text-dark fw-medium">
+                        Roman
+                    </a>
+                    <div class="d-flex gap-2">
+                        <a href="./profile.html" class="btn btn-outline-secondary btn-sm">settings</a>
+                        <a href="./login.html" class="btn btn-outline-danger btn-sm">log out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container flex-grow-1 my-3">
+        <div class="row g-4">
+            <main class="col-12 col-md-8 d-flex flex-column gap-3">
+                <section class="card">
+                    <div class="card-body">
+                        <h1 class="h4 card-title mb-3">New Question</h1>
+
+                        <form action="#" method="post">
+                            <div class="row mb-3">
+                                <label for="question-title" class="col-sm-2 col-form-label">Title</label>
+                                <div class="col-sm-10">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="question-title"
+                                        name="title"
+                                        required
+                                        maxlength="100"
+                                        placeholder="Enter your question title">
+                                    <div class="form-text">Максимум 100 символов.</div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="question-text" class="col-sm-2 col-form-label">Text</label>
+                                <div class="col-sm-10">
+                                    <textarea
+                                        class="form-control"
+                                        id="question-text"
+                                        name="text"
+                                        rows="6"
+                                        required
+                                        maxlength="2000"
+                                        placeholder="Describe your question in detail"></textarea>
+                                    <div class="form-text">Максимум 2000 символов.</div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="question-tags" class="col-sm-2 col-form-label">Tags</label>
+                                <div class="col-sm-10">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="question-tags"
+                                        name="tags"
+                                        maxlength="100"
+                                        placeholder="Add relevant tags (comma separated)">
+                                    <div class="form-text">Через запятую, не более 5 тегов.</div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-10 offset-sm-2">
+                                    <button type="submit" class="btn btn-primary">ASK!</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </main>
+
+            <aside class="col-12 col-md-4 d-flex flex-column gap-3">
+                <section class="card card-body">
+                    <h2 class="h5">Popular Tags</h2>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="./tags.html" class="text-decoration-none">perl</a>
+                        <a href="./tags.html" class="text-decoration-none">python</a>
+                        <a href="./tags.html" class="text-decoration-none">TechnoPark</a>
+                        <a href="./tags.html" class="text-decoration-none">MySQL</a>
+                        <a href="./tags.html" class="text-decoration-none">django</a>
+                        <a href="./tags.html" class="text-decoration-none">Mail.Ru</a>
+                        <a href="./tags.html" class="text-decoration-none">Voloshin</a>
+                        <a href="./tags.html" class="text-decoration-none">Firefox</a>
+                    </div>
+                </section>
+
+                <section class="card card-body">
+                    <h2 class="h5">Best Members</h2>
+                    <ul class="list-unstyled d-flex flex-column gap-1 mb-0">
+                        <li><a href="./profile.html">Mr. Freeman</a></li>
+                        <li><a href="./profile.html">Dr. House</a></li>
+                        <li><a href="./profile.html">Bender</a></li>
+                        <li><a href="./profile.html">Queen Victoria</a></li>
+                        <li><a href="./profile.html">V. Pupkin</a></li>
+                    </ul>
+                </section>
+            </aside>
+        </div>
+    </div>
+
+    <footer class="border-top bg-white py-3">
+        <div class="container">
+            <p class="mb-0">&copy; 2026 AskRoman. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="./static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
