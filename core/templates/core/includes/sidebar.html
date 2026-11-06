@@ -1,0 +1,30 @@
+<aside class="col-12 col-md-4 d-flex flex-column gap-3">
+
+    <section class="card card-body">
+        <h2 class="h5">Popular Tags</h2>
+
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'tag' 'perl' %}" class="text-decoration-none">perl</a>
+            <a href="{% url 'tag' 'python' %}" class="text-decoration-none">python</a>
+            <a href="{% url 'tag' 'technopark' %}" class="text-decoration-none">TechnoPark</a>
+            <a href="{% url 'tag' 'mysql' %}" class="text-decoration-none">MySQL</a>
+            <a href="{% url 'tag' 'django' %}" class="text-decoration-none">django</a>
+            <a href="{% url 'tag' 'mail-ru' %}" class="text-decoration-none">Mail.Ru</a>
+            <a href="{% url 'tag' 'voloshin' %}" class="text-decoration-none">Voloshin</a>
+            <a href="{% url 'tag' 'firefox' %}" class="text-decoration-none">Firefox</a>
+        </div>
+    </section>
+
+    <section class="card card-body">
+        <h2 class="h5">Best Members</h2>
+
+        <ul class="list-unstyled d-flex flex-column gap-1 mb-0">
+            <li><a href="#">Mr. Freeman</a></li>
+            <li><a href="#">Dr. House</a></li>
+            <li><a href="#">Bender</a></li>
+            <li><a href="#">Queen Victoria</a></li>
+            <li><a href="#">V. Pupkin</a></li>
+        </ul>
+    </section>
+
+</aside>

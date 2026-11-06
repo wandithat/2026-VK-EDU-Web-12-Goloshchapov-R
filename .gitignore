@@ -1,0 +1,30 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+venv/
+.venv/
+env/
+
+# Node
+node_modules/
+
+# Django
+# staticfiles/ — результат `collectstatic` (НЕ то же самое, что static/ —
+# там лежат исходники css/js/img из ДЗ1, их мы как раз коммитим).
+staticfiles/
+media/*
+!media/.gitkeep
+
+# Logs / env
+*.log
+.env

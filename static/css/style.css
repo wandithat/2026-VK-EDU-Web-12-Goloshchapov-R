@@ -1,0 +1,52 @@
+.header-search {
+    min-width: 150px;
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+}
+
+.vote-widget {
+    height: 32px;
+}
+
+.vote-widget__arrows {
+    font-size: 10px;
+    line-height: 1;
+}
+
+.vote-widget__btn {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    font-size: 10px;
+    line-height: 1;
+    color: inherit;
+}
+
+.vote-widget__btn--liked {
+    color: lightgreen;
+}
+
+.vote-widget__btn--disliked {
+    color: lightcoral;
+}
+
+.send-time {
+    font-size: 12px;
+    color: gray;
+}
+
+.gap-line {
+    height: 1px;
+    background-color: #dee2e6;
+    margin: 1rem 0;
+}
+
+.avatar-preview {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+}

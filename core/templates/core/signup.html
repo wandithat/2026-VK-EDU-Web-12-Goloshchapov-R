@@ -1,0 +1,76 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Регистрация — AskRoman{% endblock %}
+
+{% block content %}
+
+<section class="card">
+    <div class="card-body">
+
+        <h1 class="h4 card-title mb-3">Registration</h1>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="signup-login" class="form-label">
+                    Login
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    id="signup-login"
+                    name="login"
+                    required>
+            </div>
+
+            <div class="mb-3">
+                <label for="signup-email" class="form-label">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    class="form-control"
+                    id="signup-email"
+                    name="email"
+                    required>
+            </div>
+
+            <div class="mb-3">
+                <label for="signup-password" class="form-label">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    class="form-control"
+                    id="signup-password"
+                    name="password"
+                    required>
+            </div>
+
+            <div class="mb-3">
+                <label for="signup-password-repeat" class="form-label">
+                    Repeat password
+                </label>
+
+                <input
+                    type="password"
+                    class="form-control"
+                    id="signup-password-repeat"
+                    name="password_repeat"
+                    required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Register!
+            </button>
+
+        </form>
+
+    </div>
+</section>
+
+{% endblock %}

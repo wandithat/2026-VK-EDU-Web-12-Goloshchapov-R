@@ -1,0 +1,14 @@
+<div class="d-flex flex-column align-items-center gap-1">
+    <div class="avatar border border-dark rounded d-flex align-items-center justify-content-center bg-light">
+        <span class="small text-muted">avatar</span>
+    </div>
+    <div class="vote-widget border border-dark rounded d-flex align-items-stretch">
+        <div class="d-flex align-items-center px-2 border-end border-dark fw-bold">
+            {{ rating }}
+        </div>
+        <div class="vote-widget__arrows d-flex flex-column justify-content-center px-1">
+            <button class="vote-widget__btn{% if liked %} vote-widget__btn--liked{% endif %}" aria-label="Проголосовать за">&#9650;</button>
+            <button class="vote-widget__btn{% if disliked %} vote-widget__btn--disliked{% endif %}" aria-label="Проголосовать против">&#9660;</button>
+        </div>
+    </div>
+</div>
