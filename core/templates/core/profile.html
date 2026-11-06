@@ -1,0 +1,63 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Профиль — AskRoman{% endblock %}
+
+{% block content %}
+
+<section class="card">
+    <div class="card-body">
+
+        <h1 class="h4 card-title mb-3">Edit profile</h1>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="profile-login" class="form-label">
+                    Login
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    id="profile-login"
+                    name="login"
+                    value="Roman">
+            </div>
+
+            <div class="mb-3">
+                <label for="profile-email" class="form-label">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    class="form-control"
+                    id="profile-email"
+                    name="email"
+                    value="roman@example.com">
+            </div>
+
+            <div class="mb-3">
+                <label for="profile-avatar" class="form-label">
+                    Avatar
+                </label>
+
+                <input
+                    type="file"
+                    class="form-control"
+                    id="profile-avatar"
+                    name="avatar"
+                    accept="image/*">
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Save changes
+            </button>
+
+        </form>
+
+    </div>
+</section>
+
+{% endblock %}

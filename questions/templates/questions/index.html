@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Новые вопросы — AskRoman{% endblock %}
+
+{% block content %}
+
+<div class="d-flex align-items-center gap-3 mb-2">
+    <h1 class="h2 mb-2 fw-bold">Новые вопросы</h1>
+
+    <a class="text-decoration-none fw-medium"
+       href="{% url 'hot' %}">
+        Популярные вопросы
+    </a>
+</div>
+
+{% for question in questions %}
+    {% include 'questions/includes/question_card.html' %}
+{% empty %}
+    <div class="alert alert-info">
+        Пока нет вопросов.
+    </div>
+{% endfor %}
+
+{% include 'questions/includes/paginator.html' %}
+
+{% endblock %}

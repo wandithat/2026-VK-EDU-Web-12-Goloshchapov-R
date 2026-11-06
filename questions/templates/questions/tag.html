@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Тег {{ tag_name }} — AskRoman{% endblock %}
+
+{% block content %}
+
+<div class="d-flex align-items-center gap-3 mb-2">
+    <h1 class="h2 mb-2 fw-bold">
+        Вопросы по тегу: {{ tag_name }}
+    </h1>
+
+    <a href="{% url 'index' %}" class="text-decoration-none">
+        Все вопросы
+    </a>
+</div>
+
+{% for question in questions %}
+    {% include 'questions/includes/question_card.html' %}
+{% empty %}
+    <div class="alert alert-info">
+        Вопросов с таким тегом нет.
+    </div>
+{% endfor %}
+
+{% include 'questions/includes/paginator.html' %}
+
+{% endblock %}

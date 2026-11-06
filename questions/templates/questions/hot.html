@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Популярные вопросы — AskRoman{% endblock %}
+
+{% block content %}
+
+<div class="d-flex align-items-center gap-3 mb-2">
+    <h1 class="h2 mb-2 fw-bold">Популярные вопросы</h1>
+
+    <a href="{% url 'index' %}" class="text-decoration-none">
+        Новые вопросы
+    </a>
+</div>
+
+{% for question in questions %}
+    {% include 'questions/includes/question_card.html' %}
+{% empty %}
+    <div class="alert alert-info">
+        Популярных вопросов пока нет.
+    </div>
+{% endfor %}
+
+{% include 'questions/includes/paginator.html' %}
+
+{% endblock %}
