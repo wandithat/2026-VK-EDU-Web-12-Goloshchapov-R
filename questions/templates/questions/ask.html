@@ -3,64 +3,22 @@
 {% block title %}Задать вопрос — AskRoman{% endblock %}
 
 {% block content %}
-
 <section class="card">
     <div class="card-body">
-
         <h1 class="h4 card-title mb-3">Ask a question</h1>
-
-        <form method="post">
+        <form method="post" novalidate>
             {% csrf_token %}
-
-            <div class="mb-3">
-                <label for="question-title" class="form-label">
-                    Title
-                </label>
-
-                <input
-                    type="text"
-                    class="form-control"
-                    id="question-title"
-                    name="title"
-                    required
-                    maxlength="200"
-                    placeholder="Enter your question title">
-            </div>
-
-            <div class="mb-3">
-                <label for="question-text" class="form-label">
-                    Text
-                </label>
-
-                <textarea
-                    class="form-control"
-                    id="question-text"
-                    name="text"
-                    rows="5"
-                    required
-                    placeholder="Describe your question..."></textarea>
-            </div>
-
-            <div class="mb-3">
-                <label for="question-tags" class="form-label">
-                    Tags
-                </label>
-
-                <input
-                    type="text"
-                    class="form-control"
-                    id="question-tags"
-                    name="tags"
-                    placeholder="python, django, html">
-            </div>
-
-            <button type="submit" class="btn btn-success">
-                Publish question
-            </button>
-
+            {% for field in form %}
+                <div class="mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                    {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                </div>
+            {% endfor %}
+            {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+            <button type="submit" class="btn btn-success">Publish question</button>
         </form>
-
     </div>
 </section>
-
 {% endblock %}

@@ -6,9 +6,8 @@
 {% block content %}
 <div class="row g-3">
     <div class="col-md-2">
-        {% url 'vote_question' question.id 'up' as vote_up_url %}
-        {% url 'vote_question' question.id 'down' as vote_down_url %}
-        {% include 'questions/includes/vote_widget.html' with rating=question.rating liked=question.liked disliked=question.disliked vote_up_url=vote_up_url vote_down_url=vote_down_url %}
+        {% url 'vote_question' question.id as vote_up_url %}
+        {% include 'questions/includes/vote_widget.html' with rating=question.rating liked=question.liked disliked=question.disliked vote_up_url=vote_up_url vote_down_url=vote_up_url author=question.author %}
     </div>
     <div class="d-flex flex-column col-md-10 gap-3">
         <h1 class="h3 mb-0">{{ question.title }}</h1>
@@ -21,28 +20,35 @@
                 {% endfor %}
             </ul>
         </div>
-        <span class="send-time text-muted">от <a href="{% url 'profile' %}" class="text-decoration-none">{{ question.author }}</a> {{ question.time }}</span>
+        <span class="send-time text-muted">от {{ question.author }} {{ question.time }}</span>
     </div>
 </div>
 
 <div class="gap-line"></div>
 
-<h2 class="h5">Ответы ({{ answers|length }})</h2>
+<h2 class="h5">Ответы ({{ question.answers_count }})</h2>
 
 {% for answer in answers %}
-<div class="card">
+<div class="card" id="answer-{{ answer.pk }}">
     <div class="card-body">
         <div class="d-flex align-items-center gap-3 mb-2">
-            {% url 'vote_answer' answer.id 'up' as vote_up_url %}
-            {% url 'vote_answer' answer.id 'down' as vote_down_url %}
-            {% include 'questions/includes/vote_widget.html' with rating=answer.rating liked=answer.liked disliked=answer.disliked vote_up_url=vote_up_url vote_down_url=vote_down_url %}
-            <div class="d-flex flex-column gap-1">
-                <span class="send-time text-muted">от <a href="{% url 'profile' %}" class="text-decoration-none">{{ answer.author }}</a> {{ answer.time }}</span>
+            {% url 'vote_answer' answer.id as answer_vote_url %}
+            {% include 'questions/includes/vote_widget.html' with rating=answer.rating liked=answer.liked disliked=answer.disliked vote_up_url=answer_vote_url vote_down_url=answer_vote_url author=answer.author %}
+            <div class="d-flex flex-column gap-1 flex-grow-1">
+                <span class="send-time text-muted">от {{ answer.author }} {{ answer.time }}</span>
                 <p class="mb-0">{{ answer.text }}</p>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" {% if answer.correct %}checked{% endif %} disabled id="answer-correct-{{ forloop.counter }}">
-                    <label class="form-check-label" for="answer-correct-{{ forloop.counter }}">Правильный ответ</label>
-                </div>
+                {% if answer.is_correct %}
+                    <span class="badge bg-success align-self-start">Правильный ответ</span>
+                {% elif can_mark_correct %}
+                    <form method="post" action="{% url 'mark_correct' question.id %}" data-correct-answer>
+                        {% csrf_token %}
+                        <input type="hidden" name="answer_id" value="{{ answer.pk }}">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="correct-answer-{{ answer.pk }}" data-submit-on-change>
+                            <label class="form-check-label" for="correct-answer-{{ answer.pk }}">Правильный ответ</label>
+                        </div>
+                    </form>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -55,13 +61,22 @@
 
 <div class="gap-line"></div>
 
-<form action="{% url 'add_answer' question.id %}" method="post">
-    {% csrf_token %}
+{% if request.user.is_authenticated %}
+    <form action="{% url 'add_answer' question.id %}" method="post" novalidate>
+        {% csrf_token %}
+        <div class="mb-2">
+            <label for="id_text" class="form-label h6">Ваш ответ</label>
+            {{ answer_form.text }}
+            {% for error in answer_form.text.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+            <div class="form-text">Максимум 2000 символов.</div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Answer</button>
+    </form>
+{% else %}
     <div class="mb-2">
-        <label for="answer-text" class="form-label h6">Ваш ответ</label>
-        <textarea class="form-control" id="answer-text" name="answer" rows="4" required maxlength="2000" placeholder="Write your answer..."></textarea>
-        <div class="form-text">Максимум 2000 символов.</div>
+        <label class="form-label h6" for="answer-disabled">Ваш ответ</label>
+        <textarea class="form-control" id="answer-disabled" rows="4" disabled title="Войдите, чтобы добавить ответ"></textarea>
     </div>
-    <button type="submit" class="btn btn-primary">Submit Answer</button>
-</form>
+    <button type="button" class="btn btn-primary" disabled title="Войдите, чтобы добавить ответ">Submit Answer</button>
+{% endif %}
 {% endblock %}

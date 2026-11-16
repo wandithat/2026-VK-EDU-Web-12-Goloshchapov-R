@@ -2,9 +2,9 @@
     <div class="card-body">
         <div class="d-flex align-items-center gap-3 mb-2">
 
-            {% url 'vote_question' question.id 'up' as vote_up_url %}
-            {% url 'vote_question' question.id 'down' as vote_down_url %}
-            {% include 'questions/includes/vote_widget.html' with rating=question.rating liked=question.liked disliked=question.disliked vote_up_url=vote_up_url vote_down_url=vote_down_url %}
+            {% url 'vote_question' question.id as vote_up_url %}
+            {% url 'vote_question' question.id as vote_down_url %}
+            {% include 'questions/includes/vote_widget.html' with rating=question.rating liked=question.liked disliked=question.disliked vote_up_url=vote_up_url vote_down_url=vote_down_url author=question.author %}
 
             <div class="d-flex flex-column gap-1">
 

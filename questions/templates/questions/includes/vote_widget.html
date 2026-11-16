@@ -1,24 +1,27 @@
-<div class="d-flex flex-column align-items-center gap-1">
-    <div class="avatar border border-dark rounded d-flex align-items-center justify-content-center bg-light">
-        <span class="small text-muted">avatar</span>
-    </div>
-    <div class="vote-widget border border-dark rounded d-flex align-items-stretch">
-        <div class="d-flex align-items-center px-2 border-end border-dark fw-bold">
-            {{ rating|default:0 }}
-        </div>
+{% load static %}
+<div class="d-flex flex-column align-items-center gap-1 vote-widget-container">
+    {% if author.profile.avatar %}
+        <img src="{{ author.profile.avatar.url }}" alt="{{ author.username }}" class="avatar border border-dark rounded" style="object-fit: cover;">
+    {% else %}
+        <img src="{% static 'img/avatar-placeholder.png' %}" alt="Avatar placeholder" class="avatar border border-dark rounded">
+    {% endif %}
+    <div class="vote-widget border border-dark rounded d-flex align-items-stretch" data-vote-widget>
+        <div class="d-flex align-items-center px-2 border-end border-dark fw-bold" data-rating>{{ rating|default:0 }}</div>
         <div class="vote-widget__arrows d-flex flex-column justify-content-center px-1">
             {% if request.user.is_authenticated %}
-                <form method="post" action="{{ vote_up_url }}">
+                <form method="post" action="{{ vote_up_url }}" data-ajax-vote>
                     {% csrf_token %}
-                    <button type="submit" class="vote-widget__btn{% if liked %} vote-widget__btn--liked{% endif %}" aria-label="Проголосовать за">&#9650;</button>
+                    <input type="hidden" name="value" value="up">
+                    <button type="submit" class="vote-widget__btn{% if liked %} vote-widget__btn--liked{% endif %}" aria-label="Проголосовать за" title="Нравится">&#9650;</button>
                 </form>
-                <form method="post" action="{{ vote_down_url }}">
+                <form method="post" action="{{ vote_down_url }}" data-ajax-vote>
                     {% csrf_token %}
-                    <button type="submit" class="vote-widget__btn{% if disliked %} vote-widget__btn--disliked{% endif %}" aria-label="Проголосовать против">&#9660;</button>
+                    <input type="hidden" name="value" value="down">
+                    <button type="submit" class="vote-widget__btn{% if disliked %} vote-widget__btn--disliked{% endif %}" aria-label="Проголосовать против" title="Не нравится">&#9660;</button>
                 </form>
             {% else %}
-                <a class="vote-widget__btn" href="{% url 'login' %}" aria-label="Войдите, чтобы проголосовать">&#9650;</a>
-                <a class="vote-widget__btn" href="{% url 'login' %}" aria-label="Войдите, чтобы проголосовать">&#9660;</a>
+                <button type="button" class="vote-widget__btn" disabled title="Войдите, чтобы оценить">&#9650;</button>
+                <button type="button" class="vote-widget__btn" disabled title="Войдите, чтобы оценить">&#9660;</button>
             {% endif %}
         </div>
     </div>

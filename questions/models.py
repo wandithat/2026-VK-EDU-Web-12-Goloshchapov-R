@@ -59,7 +59,7 @@ class QuestionQuerySet(models.QuerySet):
         )
 
         return (
-            self.select_related('author')
+            self.select_related('author', 'author__profile')
             .prefetch_related('tag_objects')
             .annotate(
                 rating=Coalesce(
@@ -169,7 +169,7 @@ class AnswerQuerySet(models.QuerySet):
 
         return (
             self.filter(question=question)
-            .select_related('author')
+            .select_related('author', 'author__profile')
             .annotate(
                 rating=Coalesce(
                     Subquery(likes_rating, output_field=IntegerField()),
@@ -223,6 +223,13 @@ class Answer(models.Model):
         ordering = ('created_at', 'id')
         indexes = [
             models.Index(fields=['question', 'created_at', 'id'], name='answer_q_created_idx'),
+        ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=['question'],
+                condition=models.Q(is_correct=True),
+                name='one_correct_answer_per_question',
+            ),
         ]
 
     def __str__(self):

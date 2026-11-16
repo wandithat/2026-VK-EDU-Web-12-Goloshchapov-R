@@ -31,18 +31,22 @@
                 </div>
             </form>
 
-            <a href="{% url 'ask' %}" class="btn btn-success">ASK!</a>
-            <a href="{% url 'signup' %}" class="btn btn-outline-primary">New account</a>
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'ask' %}" class="btn btn-success">ASK!</a>
+            {% else %}
+                <button type="button" class="btn btn-success" disabled title="Войдите, чтобы задать вопрос">ASK!</button>
+            {% endif %}
 
             <div class="d-flex align-items-center gap-2 flex-shrink-0">
-                <img src="{% static 'img/avatar-placeholder.png' %}"
-                     alt="Roman avatar"
-                     class="rounded-circle"
-                     width="50" height="50">
+                {% if request.user.is_authenticated and request.user.profile.avatar %}
+                    <img src="{{ request.user.profile.avatar.url }}" alt="User avatar" class="rounded-circle" width="50" height="50" style="object-fit: cover;">
+                {% else %}
+                    <img src="{% static 'img/avatar-placeholder.png' %}" alt="Avatar placeholder" class="rounded-circle" width="50" height="50">
+                {% endif %}
 
                 <div class="d-flex flex-column">
                     {% if request.user.is_authenticated %}
-                        <a href="{% url 'profile' %}" class="text-decoration-none text-dark fw-medium">{{ request.user.username }}</a>
+                        <a href="{% url 'profile' %}" class="text-decoration-none text-dark fw-medium">{{ request.user.profile.nickname|default:request.user.username }}</a>
                         <div class="d-flex gap-2">
                             <a href="{% url 'profile' %}" class="btn btn-outline-secondary btn-sm">settings</a>
                             <form method="post" action="{% url 'logout' %}">
@@ -87,6 +91,7 @@
     </footer>
 
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/askroman.js' %}"></script>
 
     {% block extra_js %}{% endblock %}
 

@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError, transaction
-from django.test import TestCase
+from django.test import Client, TestCase
 from django.urls import reverse
 
 from .models import Answer, AnswerLike, Question, QuestionLike, Tag
@@ -111,25 +111,122 @@ class QuestionActionsTests(TestCase):
         self.assertEqual(set(created.tags), {'python', 'django'})
 
     def test_authenticated_user_can_add_answer(self):
-        response = self.client.post(reverse('add_answer', args=(self.question.pk,)), {'answer': 'Мой ответ'})
-        self.assertRedirects(response, reverse('question', args=(self.question.pk,)))
+        response = self.client.post(reverse('add_answer', args=(self.question.pk,)), {'text': 'Мой ответ'})
+        created_answer = Answer.objects.get(question=self.question, author=self.user, text='Мой ответ')
+        self.assertRedirects(response, f'{reverse("question", args=(self.question.pk,))}?page=1#answer-{created_answer.pk}')
         self.assertTrue(Answer.objects.filter(question=self.question, author=self.user, text='Мой ответ').exists())
 
     def test_question_vote_can_be_added_changed_and_removed(self):
-        url = reverse('vote_question', args=(self.question.pk, 'up'))
-        self.client.post(url)
+        url = reverse('vote_question', args=(self.question.pk,))
+        self.client.post(url, {'value': 'up'})
         vote = QuestionLike.objects.get(user=self.user, question=self.question)
         self.assertTrue(vote.is_positive)
-        self.client.post(reverse('vote_question', args=(self.question.pk, 'down')))
+        self.client.post(url, {'value': 'down'})
         vote.refresh_from_db()
         self.assertFalse(vote.is_positive)
-        self.client.post(reverse('vote_question', args=(self.question.pk, 'down')))
+        self.client.post(url, {'value': 'down'})
         self.assertFalse(QuestionLike.objects.filter(user=self.user, question=self.question).exists())
 
     def test_answer_vote_can_be_added(self):
-        response = self.client.post(reverse('vote_answer', args=(self.answer.pk, 'up')))
-        self.assertRedirects(response, reverse('question', args=(self.question.pk,)))
+        response = self.client.post(reverse('vote_answer', args=(self.answer.pk,)), {'value': 'up'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['rating'], 1)
         self.assertTrue(AnswerLike.objects.filter(user=self.user, answer=self.answer, is_positive=True).exists())
+
+    def test_question_vote_returns_json_and_toggles_rating(self):
+        response = self.client.post(reverse('vote_question', args=(self.question.pk,)), {'value': 'up'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['rating'], 1)
+        response = self.client.post(reverse('vote_question', args=(self.question.pk,)), {'value': 'up'})
+        self.assertEqual(response.json()['rating'], 0)
+
+    def test_invalid_vote_value_returns_json_error(self):
+        response = self.client.post(reverse('vote_question', args=(self.question.pk,)), {'value': 'invalid'})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('error', response.json())
+
+    def test_ajax_vote_requires_csrf_token(self):
+        csrf_client = Client(enforce_csrf_checks=True)
+        csrf_client.force_login(self.user)
+        response = csrf_client.post(
+            reverse('vote_question', args=(self.question.pk,)),
+            {'value': 'up'},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json()['error'], 'CSRF-проверка не пройдена.')
+
+    def test_ajax_vote_wrong_method_returns_json(self):
+        response = self.client.get(reverse('vote_question', args=(self.question.pk,)))
+        self.assertEqual(response.status_code, 405)
+        self.assertIn('error', response.json())
+
+    def test_vote_requires_authentication(self):
+        self.client.logout()
+        response = self.client.post(reverse('vote_question', args=(self.question.pk,)), {'value': 'up'})
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.json()['error'], 'Необходимо войти в аккаунт.')
+
+    def test_only_question_author_can_mark_correct_answer(self):
+        response = self.client.post(
+            reverse('mark_correct', args=(self.question.pk,)),
+            {'answer_id': self.answer.pk},
+        )
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(self.answer.is_correct)
+
+    def test_question_author_can_mark_correct_answer(self):
+        self.client.force_login(self.other_user)
+        response = self.client.post(
+            reverse('mark_correct', args=(self.question.pk,)),
+            {'answer_id': self.answer.pk},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()['is_correct'])
+        self.answer.refresh_from_db()
+        self.assertTrue(self.answer.is_correct)
+
+    def test_correct_answer_must_belong_to_question(self):
+        another_question = Question.objects.create(
+            title='Другой вопрос',
+            text='Описание',
+            author=self.other_user,
+        )
+        another_answer = Answer.objects.create(
+            question=another_question,
+            author=self.other_user,
+            text='Чужой ответ',
+        )
+        self.client.force_login(self.other_user)
+        response = self.client.post(
+            reverse('mark_correct', args=(self.question.pk,)),
+            {'answer_id': another_answer.pk},
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(another_answer.is_correct)
+
+    def test_only_one_answer_can_be_correct(self):
+        second_answer = Answer.objects.create(
+            question=self.question,
+            author=self.user,
+            text='Второй ответ',
+        )
+        self.client.force_login(self.other_user)
+        self.client.post(reverse('mark_correct', args=(self.question.pk,)), {'answer_id': self.answer.pk})
+        response = self.client.post(reverse('mark_correct', args=(self.question.pk,)), {'answer_id': second_answer.pk})
+        self.assertEqual(response.status_code, 200)
+        self.answer.refresh_from_db()
+        second_answer.refresh_from_db()
+        self.assertFalse(self.answer.is_correct)
+        self.assertTrue(second_answer.is_correct)
+
+    def test_answer_form_preserves_invalid_input(self):
+        response = self.client.post(
+            reverse('add_answer', args=(self.question.pk,)),
+            {'text': ''},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['answer_form'].errors['text'])
 
     def test_anonymous_user_cannot_create_question(self):
         self.client.logout()

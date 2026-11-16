@@ -9,8 +9,9 @@ User = get_user_model()
 
 class ProfileInline(admin.StackedInline):
     model = Profile
-    extra = 1
+    extra = 0
     max_num = 1
+    fields = ('nickname', 'avatar')
 
 
 class AskRomanUserAdmin(UserAdmin):
