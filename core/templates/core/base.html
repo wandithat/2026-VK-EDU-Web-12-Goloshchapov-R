@@ -32,6 +32,7 @@
             </form>
 
             <a href="{% url 'ask' %}" class="btn btn-success">ASK!</a>
+            <a href="{% url 'signup' %}" class="btn btn-outline-primary">New account</a>
 
             <div class="d-flex align-items-center gap-2 flex-shrink-0">
                 <img src="{% static 'img/avatar-placeholder.png' %}"
@@ -40,22 +41,19 @@
                      width="50" height="50">
 
                 <div class="d-flex flex-column">
-                    <a href="{% url 'profile' %}"
-                       class="text-decoration-none text-dark fw-medium">
-                        Roman
-                    </a>
-
-                    <div class="d-flex gap-2">
-                        <a href="{% url 'profile' %}"
-                           class="btn btn-outline-secondary btn-sm">
-                            settings
-                        </a>
-
-                        <a href="{% url 'login' %}"
-                           class="btn btn-outline-danger btn-sm">
-                            log out
-                        </a>
-                    </div>
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'profile' %}" class="text-decoration-none text-dark fw-medium">{{ request.user.username }}</a>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'profile' %}" class="btn btn-outline-secondary btn-sm">settings</a>
+                            <form method="post" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm">log out</button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm">log in</a>
+                        <a href="{% url 'signup' %}" class="btn btn-outline-secondary btn-sm">sign up</a>
+                    {% endif %}
                 </div>
             </div>
 
@@ -66,6 +64,11 @@
         <div class="row g-4">
 
             <main class="col-12 col-md-8 d-flex flex-column gap-3">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags|default:'info' }}" role="alert">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
                 {% block content %}
                 {% endblock %}
             </main>

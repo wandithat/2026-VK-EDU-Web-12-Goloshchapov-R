@@ -6,7 +6,9 @@
 {% block content %}
 <div class="row g-3">
     <div class="col-md-2">
-        {% include 'questions/includes/vote_widget.html' with rating=question.rating liked=question.liked disliked=question.disliked %}
+        {% url 'vote_question' question.id 'up' as vote_up_url %}
+        {% url 'vote_question' question.id 'down' as vote_down_url %}
+        {% include 'questions/includes/vote_widget.html' with rating=question.rating liked=question.liked disliked=question.disliked vote_up_url=vote_up_url vote_down_url=vote_down_url %}
     </div>
     <div class="d-flex flex-column col-md-10 gap-3">
         <h1 class="h3 mb-0">{{ question.title }}</h1>
@@ -31,7 +33,9 @@
 <div class="card">
     <div class="card-body">
         <div class="d-flex align-items-center gap-3 mb-2">
-            {% include 'questions/includes/vote_widget.html' with rating=answer.rating liked=answer.liked disliked=answer.disliked %}
+            {% url 'vote_answer' answer.id 'up' as vote_up_url %}
+            {% url 'vote_answer' answer.id 'down' as vote_down_url %}
+            {% include 'questions/includes/vote_widget.html' with rating=answer.rating liked=answer.liked disliked=answer.disliked vote_up_url=vote_up_url vote_down_url=vote_down_url %}
             <div class="d-flex flex-column gap-1">
                 <span class="send-time text-muted">от <a href="{% url 'profile' %}" class="text-decoration-none">{{ answer.author }}</a> {{ answer.time }}</span>
                 <p class="mb-0">{{ answer.text }}</p>
@@ -51,7 +55,7 @@
 
 <div class="gap-line"></div>
 
-<form action="#" method="post">
+<form action="{% url 'add_answer' question.id %}" method="post">
     {% csrf_token %}
     <div class="mb-2">
         <label for="answer-text" class="form-label h6">Ваш ответ</label>

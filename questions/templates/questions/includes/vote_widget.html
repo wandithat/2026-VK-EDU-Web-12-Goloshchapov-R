@@ -4,11 +4,22 @@
     </div>
     <div class="vote-widget border border-dark rounded d-flex align-items-stretch">
         <div class="d-flex align-items-center px-2 border-end border-dark fw-bold">
-            {{ rating }}
+            {{ rating|default:0 }}
         </div>
         <div class="vote-widget__arrows d-flex flex-column justify-content-center px-1">
-            <button class="vote-widget__btn{% if liked %} vote-widget__btn--liked{% endif %}" aria-label="Проголосовать за">&#9650;</button>
-            <button class="vote-widget__btn{% if disliked %} vote-widget__btn--disliked{% endif %}" aria-label="Проголосовать против">&#9660;</button>
+            {% if request.user.is_authenticated %}
+                <form method="post" action="{{ vote_up_url }}">
+                    {% csrf_token %}
+                    <button type="submit" class="vote-widget__btn{% if liked %} vote-widget__btn--liked{% endif %}" aria-label="Проголосовать за">&#9650;</button>
+                </form>
+                <form method="post" action="{{ vote_down_url }}">
+                    {% csrf_token %}
+                    <button type="submit" class="vote-widget__btn{% if disliked %} vote-widget__btn--disliked{% endif %}" aria-label="Проголосовать против">&#9660;</button>
+                </form>
+            {% else %}
+                <a class="vote-widget__btn" href="{% url 'login' %}" aria-label="Войдите, чтобы проголосовать">&#9650;</a>
+                <a class="vote-widget__btn" href="{% url 'login' %}" aria-label="Войдите, чтобы проголосовать">&#9660;</a>
+            {% endif %}
         </div>
     </div>
 </div>

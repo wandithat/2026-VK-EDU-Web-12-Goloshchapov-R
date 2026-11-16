@@ -11,3 +11,5 @@ staticfiles/
 media/*
 !media/.gitkeep
 .env
+.env.local
+.env.docker
